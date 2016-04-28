@@ -3,7 +3,7 @@ var $fire = ( () => {
 
   var $fire = {};
   const fireColors = ['#FF0000','#FF5A04', '#FF9C00',
-  '#FF8D73','#F8FFF3', '#fefefe',
+  '#FF8D73','#F8FFF3', '#fefefe','#FFFC14',
   '#8c959c', '#E1775D','#FF9C51', '#C63524','#B7ACA6',
   '#FBFEC9', '#EB4700', '#FFFEB9', '#FFFEDA', '#F76701'];
   const img = document.getElementById('fireImage');
