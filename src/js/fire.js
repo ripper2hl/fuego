@@ -12,6 +12,8 @@ var $fire = ( () => {
   $fire.passImageToCanvas = passImageToCanvas;
   $fire.findColorImage = findColorImage;
   $fire.fetchAllImagePixelColor = fetchAllImagePixelColor;
+  $fire.fetchPixelsImage = fetchPixelsImage;
+  $fire.fetchPixelsWhitFire = fetchPixelsWhitFire;
   return $fire;
 
   /**
@@ -76,15 +78,24 @@ var $fire = ( () => {
     return data.data;
   }
 
-//TODO
-  function fetchPixelsWhitFire(imgPixels){
-    pixelsWithFire = [];
+  /**
+   * Find pixels with fire in image pixels
+   * @author Jesus Perales.
+   */
+  function fetchPixelsWhitFire(callback){
+    let imgPixels = $fire.fetchPixelsImage();
     for(var y = 0; y < canvas.height; y++){
       for(var x = 0; x < canvas.width; x++){
-        var rgb = [imgPixels[i], imgPixels[i + 1], imgPixels[i + 2], imgPixels[i + 3] ];
-        var hex = rgbToHexadecimal(rgb);
+        var i = (x + y * canvas.width) * 4;
+        var rgba = [imgPixels[i], imgPixels[i + 1], imgPixels[i + 2], imgPixels[i + 3] ];
+        var hex = rgbToHexadecimal(rgba);
         if(isFireColor(hex)){
-          console.log('Encontrado');
+          var pixelFire = { color : { } };
+          pixelFire.x = x;
+          pixelFire.y = y;
+          pixelFire.color.hexadecimal = hex;
+          pixelFire.color.rgba = rgba;
+          callback(pixelFire);
         }
       }
     }

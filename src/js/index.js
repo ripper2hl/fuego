@@ -12,6 +12,9 @@
   function init(){
     let colors = [];
     $fire.passImageToCanvas();
-    $fire.fetchAllImagePixelColor();
+    $fire.fetchPixelsWhitFire(function (pixelFire) {
+      console.log('Pixel agregado: ', pixelFire);
+    });
+
   }
 })();
