@@ -4,7 +4,8 @@ var $fire = ( () => {
   var $fire = {};
   const fireColors = ['#FF0000','#FF5A04', '#FF9C00',
   '#FF8D73','#F8FFF3', '#fefefe',
-  '#8c959c', '#E1775D','#FF9C51', '#C63524','#B7ACA6', '#FBFEC9'];
+  '#8c959c', '#E1775D','#FF9C51', '#C63524','#B7ACA6',
+  '#FBFEC9', '#EB4700', '#FFFEB9', '#FFFEDA', '#F76701'];
   const img = document.getElementById('fireImage');
   let canvas = document.getElementById('fireCanvasImage');
 
@@ -54,15 +55,11 @@ var $fire = ( () => {
     var imgPixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
     for(var y = 0; y < imgPixels.height; y++){
       for(var x = 0; x < imgPixels.width; x++){
-        var i = (y * 4) * imgPixels.width + x * 4;
+        var i = (x + y * imgPixels.width) * 4;
         var rgb = [imgPixels.data[i], imgPixels.data[i + 1], imgPixels.data[i + 2], imgPixels.data[i + 3] ];
         var hex = rgbToHexadecimal(rgb);
         if(isFireColor(hex)){
           console.log('Encontrado');
-          imgPixels.data[i] = 255;
-          imgPixels.data[i + 1] = 255;
-          imgPixels.data[i + 2] = 255;
-        }else{
           imgPixels.data[i] = 0;
           imgPixels.data[i + 1] = 0;
           imgPixels.data[i + 2] = 0;
@@ -70,6 +67,28 @@ var $fire = ( () => {
       }
     }
     ctx.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
+  }
+
+//TODO
+  function fetchPixelsImage(){
+    let data = canvas.getContext('2d').getImageData( 0, 0 , canvas.width, canvas.height);
+    var ctx = canvas.getContext('2d');
+    return data.data;
+  }
+
+//TODO
+  function fetchPixelsWhitFire(imgPixels){
+    pixelsWithFire = [];
+    for(var y = 0; y < canvas.height; y++){
+      for(var x = 0; x < canvas.width; x++){
+
+      }
+    }
+    var rgb = [imgPixels[i], imgPixels[i + 1], imgPixels[i + 2], imgPixels[i + 3] ];
+    var hex = rgbToHexadecimal(rgb);
+    if(isFireColor(hex)){
+      console.log('Encontrado');
+    }
   }
 
   /**
