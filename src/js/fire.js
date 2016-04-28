@@ -81,13 +81,12 @@ var $fire = ( () => {
     pixelsWithFire = [];
     for(var y = 0; y < canvas.height; y++){
       for(var x = 0; x < canvas.width; x++){
-
+        var rgb = [imgPixels[i], imgPixels[i + 1], imgPixels[i + 2], imgPixels[i + 3] ];
+        var hex = rgbToHexadecimal(rgb);
+        if(isFireColor(hex)){
+          console.log('Encontrado');
+        }
       }
-    }
-    var rgb = [imgPixels[i], imgPixels[i + 1], imgPixels[i + 2], imgPixels[i + 3] ];
-    var hex = rgbToHexadecimal(rgb);
-    if(isFireColor(hex)){
-      console.log('Encontrado');
     }
   }
 
