@@ -14,6 +14,7 @@ var $fire = ( () => {
   $fire.fetchAllImagePixelColor = fetchAllImagePixelColor;
   $fire.fetchPixelsImage = fetchPixelsImage;
   $fire.fetchPixelsWhitFire = fetchPixelsWhitFire;
+  $fire.drawRectangle = drawRectangle;
   return $fire;
 
   /**
@@ -82,7 +83,8 @@ var $fire = ( () => {
    * Find pixels with fire in image pixels
    * @author Jesus Perales.
    */
-  function fetchPixelsWhitFire(callback){
+  function fetchPixelsWhitFire(notifyNotWork){
+    let deferred = jQuery.Deferred();
     let imgPixels = $fire.fetchPixelsImage();
     for(var y = 0; y < canvas.height; y++){
       for(var x = 0; x < canvas.width; x++){
@@ -95,10 +97,21 @@ var $fire = ( () => {
           pixelFire.y = y;
           pixelFire.color.hexadecimal = hex;
           pixelFire.color.rgba = rgba;
-          callback(pixelFire);
+          notifyNotWork(pixelFire);
+          deferred.notify(pixelFire);
+        }
+        if( (x + 1)  <= canvas.width && (y + 1) <= canvas.height){
+          deferred.resolve();
         }
       }
     }
+    return deferred.promise();
+  }
+
+  function drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY){
+    let context = canvas.getContext('2d');
+    context.fillRect(maximumAxisX,maximumAxisY,minimumAxisX,minimumAxisY);
+
   }
 
   /**
