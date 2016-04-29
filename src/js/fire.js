@@ -12,6 +12,9 @@ var $fire = ( () => {
   $fire.passImageToCanvas = passImageToCanvas;
   $fire.findColorImage = findColorImage;
   $fire.fetchAllImagePixelColor = fetchAllImagePixelColor;
+  $fire.fetchPixelsImage = fetchPixelsImage;
+  $fire.fetchPixelsWhitFire = fetchPixelsWhitFire;
+  $fire.drawRectangle = drawRectangle;
   return $fire;
 
   /**
@@ -76,19 +79,51 @@ var $fire = ( () => {
     return data.data;
   }
 
-//TODO
-  function fetchPixelsWhitFire(imgPixels){
-    pixelsWithFire = [];
+  /**
+   * Find pixels with fire in image pixels
+   * @author Jesus Perales.
+   */
+  function fetchPixelsWhitFire(notifyNotWork){
+    let deferred = jQuery.Deferred();
+    let imgPixels = $fire.fetchPixelsImage();
     for(var y = 0; y < canvas.height; y++){
       for(var x = 0; x < canvas.width; x++){
-
+        var i = (x + y * canvas.width) * 4;
+        var rgba = [imgPixels[i], imgPixels[i + 1], imgPixels[i + 2], imgPixels[i + 3] ];
+        var hex = rgbToHexadecimal(rgba);
+        if(isFireColor(hex)){
+          var pixelFire = { color : { } };
+          pixelFire.x = x;
+          pixelFire.y = y;
+          pixelFire.color.hexadecimal = hex;
+          pixelFire.color.rgba = rgba;
+          notifyNotWork(pixelFire);
+          deferred.notify(pixelFire);
+        }
+        if( (x + 1)  <= canvas.width && (y + 1) <= canvas.height){
+          deferred.resolve();
+        }
       }
     }
-    var rgb = [imgPixels[i], imgPixels[i + 1], imgPixels[i + 2], imgPixels[i + 3] ];
-    var hex = rgbToHexadecimal(rgb);
-    if(isFireColor(hex)){
-      console.log('Encontrado');
-    }
+    return deferred.promise();
+  }
+
+  function drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY){
+    let context = canvas.getContext('2d');
+    context.lineWidth=10;
+    context.strokeStyle="green";
+    console.debug('Maximum axis x: ', maximumAxisX);
+    console.debug('Minimum axis x: ', minimumAxisX);
+    console.debug('Maximum axis y: ', maximumAxisY);
+    console.debug('Minimum axis y: ', minimumAxisY);
+    context.beginPath();
+    context.moveTo(minimumAxisX, minimumAxisY);
+    context.lineTo(maximumAxisX, minimumAxisY);
+    context.lineTo(maximumAxisX, maximumAxisY);
+    context.lineTo(minimumAxisX, maximumAxisY);
+    context.lineTo(minimumAxisX, minimumAxisY);
+    context.stroke();
+
   }
 
   /**
