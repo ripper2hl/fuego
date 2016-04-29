@@ -110,7 +110,19 @@ var $fire = ( () => {
 
   function drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY){
     let context = canvas.getContext('2d');
-    context.fillRect(maximumAxisX,maximumAxisY,minimumAxisX,minimumAxisY);
+    context.lineWidth=10;
+    context.strokeStyle="green";
+    console.debug('Maximum axis x: ', maximumAxisX);
+    console.debug('Minimum axis x: ', minimumAxisX);
+    console.debug('Maximum axis y: ', maximumAxisY);
+    console.debug('Minimum axis y: ', minimumAxisY);
+    context.beginPath();
+    context.moveTo(minimumAxisX, minimumAxisY);
+    context.lineTo(maximumAxisX, minimumAxisY);
+    context.lineTo(maximumAxisX, maximumAxisY);
+    context.lineTo(minimumAxisX, maximumAxisY);
+    context.lineTo(minimumAxisX, minimumAxisY);
+    context.stroke();
 
   }
 
