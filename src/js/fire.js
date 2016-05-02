@@ -6,15 +6,16 @@ var $fire = ( () => {
   '#FF8D73','#F8FFF3', '#fefefe','#FFFC14',
   '#8c959c', '#E1775D','#FF9C51', '#C63524','#B7ACA6',
   '#FBFEC9', '#EB4700', '#FFFEB9', '#FFFEDA', '#F76701'];
-  const img = document.getElementById('fireImage');
+  let video = document.getElementById('video');
   let canvas = document.getElementById('fireCanvasImage');
 
-  $fire.passImageToCanvas = passImageToCanvas;
+  $fire.passVideoToCanvas = passVideoToCanvas;
   $fire.findColorImage = findColorImage;
   $fire.fetchAllImagePixelColor = fetchAllImagePixelColor;
   $fire.fetchPixelsImage = fetchPixelsImage;
   $fire.fetchPixelsWhitFire = fetchPixelsWhitFire;
   $fire.drawRectangle = drawRectangle;
+  $fire.detectFire = detectFire;
   return $fire;
 
   /**
@@ -32,10 +33,15 @@ var $fire = ( () => {
    * Convert image (img with fireImage id) to canvas.
    * @author Jesus Perales.
    */
-  function passImageToCanvas(){
-    canvas.width = img.width;
-    canvas.height = img.height;
-    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+  function passVideoToCanvas(){
+    video.addEventListener('play', () => {
+      setInterval(function() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        $fire.detectFire();
+      }, 1000);
+    }, false);
   }
 
   function findColorImage(x, y){
@@ -72,7 +78,9 @@ var $fire = ( () => {
     ctx.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
   }
 
-//TODO
+  /**
+   * get all pixeles from canvas
+   */
   function fetchPixelsImage(){
     let data = canvas.getContext('2d').getImageData( 0, 0 , canvas.width, canvas.height);
     var ctx = canvas.getContext('2d');
@@ -112,10 +120,6 @@ var $fire = ( () => {
     let context = canvas.getContext('2d');
     context.lineWidth=10;
     context.strokeStyle="green";
-    console.debug('Maximum axis x: ', maximumAxisX);
-    console.debug('Minimum axis x: ', minimumAxisX);
-    console.debug('Maximum axis y: ', maximumAxisY);
-    console.debug('Minimum axis y: ', minimumAxisY);
     context.beginPath();
     context.moveTo(minimumAxisX, minimumAxisY);
     context.lineTo(maximumAxisX, minimumAxisY);
@@ -123,7 +127,6 @@ var $fire = ( () => {
     context.lineTo(minimumAxisX, maximumAxisY);
     context.lineTo(minimumAxisX, minimumAxisY);
     context.stroke();
-
   }
 
   /**
@@ -137,6 +140,25 @@ var $fire = ( () => {
     ("0" + parseInt(rgb[0],10).toString(16)).slice(-2) +
     ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
     ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) : '';
+  }
+
+  function detectFire(){
+    let colors = [];
+    let maximumAxisX = 0;
+    let minimumAxisX = 1000;
+    let maximumAxisY = 0;
+    let minimumAxisY = 1000;
+    $fire.fetchPixelsWhitFire(function (pixelFire){
+      maximumAxisX = Math.max( maximumAxisX, pixelFire.x );
+      minimumAxisX = Math.min( minimumAxisX, pixelFire.x );
+      maximumAxisY = Math.max( maximumAxisY, pixelFire.y );
+      minimumAxisY = Math.min( minimumAxisY, pixelFire.y );
+    })
+    .done(function(){
+      console.debug('drawRectangle');
+      console.log(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY);
+      $fire.drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY);
+    });
   }
 
 })();
