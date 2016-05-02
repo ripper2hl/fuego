@@ -12,7 +12,7 @@
 
   function videoHandle(stream) {
       $('#video').prop('src', window.URL.createObjectURL(stream));
-      $fire.passVideoToCanvas();
+      $fire.initDetectionFire();
   }
 
   function videoError(){
