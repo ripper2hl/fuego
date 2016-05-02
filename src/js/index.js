@@ -11,12 +11,12 @@
   }
 
   function videoHandle(stream) {
-      $('#video').prop('src', window.URL.createObjectURL(stream));
+      document.getElementById('video').src = window.URL.createObjectURL(stream);
       $fire.initDetectionFire();
   }
 
   function videoError(){
-
+    console.error('Error video camera');
   }
 
 })();
