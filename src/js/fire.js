@@ -19,7 +19,8 @@ var $fire = ( () => {
   'rgb(251,254,201)',
   'rgb(255,254,185)',
   'rgb(255,254,218)',
-  'rgb(247,103,1)'
+  'rgb(247,103,1)',
+  'rgb(174, 95, 60)'
   ];
   let video = document.getElementById('video');
   let canvas = document.getElementById('fireCanvasImage');
@@ -39,7 +40,7 @@ var $fire = ( () => {
    */
   function isFireColor(color){
     let isFound = fireColors.filter(
-      (fireColor) => {return fireColor.toLowerCase() === color.toLowerCase();});
+      (fireColor) => {return fireColor === color;});
     return isFound.length > 0;
   }
 
@@ -74,7 +75,7 @@ var $fire = ( () => {
           notifyNotWork(pixelFire);
           deferred.notify(pixelFire);
         }
-        if( x  === canvas.width && y === canvas.height){
+        if( (x + 1)  < canvas.width && (y + 1) < canvas.height){
           deferred.resolve();
         }
       }
