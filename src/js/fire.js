@@ -137,7 +137,7 @@ var $fire = ( () => {
       setInterval(function() {
         canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         callback();
-      }, 500);
+      }, 300);
     }, false);
   }
 
