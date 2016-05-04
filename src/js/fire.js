@@ -30,15 +30,12 @@ var $fire = ( () => {
    */
   function fetchPixelsWhitFire(notifyNotWork){
     let deferred = jQuery.Deferred();
-    let imgPixels = $fire.fetchPixelsImage();
-    let canvasHeight = canvas.height;
-    let canvasWidth = canvas.width;
     let worker = new Worker('js/searchWorker.js');
     let imgInformation = {};
-    imgInformation.imgPixels = imgPixels;
+    imgInformation.imgPixels = $fire.fetchPixelsImage();
     imgInformation.canvas = {};
-    imgInformation.canvas.height = canvasHeight;
-    imgInformation.canvas.width = canvasWidth;
+    imgInformation.canvas.height = canvas.height;
+    imgInformation.canvas.width = canvas.width;
     worker.postMessage(imgInformation);
     worker.addEventListener('message', e => {
       if(e.data !== 'Finish'){
@@ -51,9 +48,18 @@ var $fire = ( () => {
     return deferred.promise();
   }
 
+  /**
+   * Drawn an rectangle on canvas image
+   * with four points for the corners.
+   * @param maximumAxisX point maximum on axis x
+   * @param maximumAxisY point maximum on axis y
+   * @param minimumAxisX point minimum on axis x
+   * @param minimumAxisY point minimum on axis y
+   * @author Jesus Perales.
+   */
   function drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY){
     let context = canvas.getContext('2d');
-    context.lineWidth=10;
+    context.lineWidth= 5 ;
     context.strokeStyle="green";
     context.beginPath();
     context.moveTo(minimumAxisX, minimumAxisY);
