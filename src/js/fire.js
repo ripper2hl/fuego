@@ -4,12 +4,6 @@ var $fire = ( () => {
   var $fire = {};
   let video = document.getElementById('video');
   let canvas = document.getElementById('fireCanvasImage');
-
-  $fire.passVideoToCanvas = passVideoToCanvas;
-  $fire.fetchPixelsImage = fetchPixelsImage;
-  $fire.fetchPixelsWhitFire = fetchPixelsWhitFire;
-  $fire.drawRectangle = drawRectangle;
-  $fire.detectFire = detectFire;
   $fire.initDetectionFire = initDetectionFire;
   return $fire;
 
@@ -22,30 +16,6 @@ var $fire = ( () => {
     let data = canvas.getContext('2d').getImageData( 0, 0 , canvas.width, canvas.height);
     var ctx = canvas.getContext('2d');
     return data.data;
-  }
-
-  /**
-   * Find pixels with fire in image pixels
-   * @author Jesus Perales.
-   */
-  function fetchPixelsWhitFire(notifyNotWork){
-    let deferred = jQuery.Deferred();
-    let worker = new Worker('js/searchWorker.js');
-    let imgInformation = {};
-    imgInformation.imgPixels = $fire.fetchPixelsImage();
-    imgInformation.canvas = {};
-    imgInformation.canvas.height = canvas.height;
-    imgInformation.canvas.width = canvas.width;
-    worker.postMessage(imgInformation);
-    worker.addEventListener('message', e => {
-      if(e.data !== 'Finish'){
-        notifyNotWork(e.data);
-      }else{
-        worker.terminate();
-        deferred.resolve();
-      }
-    }, false);
-    return deferred.promise();
   }
 
   /**
@@ -80,7 +50,7 @@ var $fire = ( () => {
     let minimumAxisX;
     let minimumAxisY;
     let flagFirstTime = true;
-    $fire.fetchPixelsWhitFire( pixelFire => {
+    fetchPixelsWhitFire( pixelFire => {
       if(flagFirstTime){
         maximumAxisX = pixelFire.x;
         minimumAxisX = pixelFire.x;
@@ -94,8 +64,33 @@ var $fire = ( () => {
         minimumAxisY = Math.min( minimumAxisY, pixelFire.y );
       }
     })
-    .done( result => {
-      $fire.drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY);
+    .then( result => {
+      drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY);
+    });
+  }
+
+  /**
+   * Find pixels with fire in image pixels
+   * @param progress callback for notify the progress
+   * @author Jesus Perales.
+   */
+  function fetchPixelsWhitFire(progress){
+    return new Promise( (resolve, reject) => {
+      let worker = new Worker('js/searchWorker.js');
+      let imgInformation = {};
+      imgInformation.imgPixels = fetchPixelsImage();
+      imgInformation.canvas = {};
+      imgInformation.canvas.height = canvas.height;
+      imgInformation.canvas.width = canvas.width;
+      worker.postMessage(imgInformation);
+      worker.addEventListener('message', e => {
+        if(e.data !== 'Finish'){
+          progress(e.data);
+        }else{
+          worker.terminate();
+          resolve();
+        }
+      }, false);
     });
   }
 
@@ -120,7 +115,7 @@ var $fire = ( () => {
    * @author Jesus Perales.
    */
   function initDetectionFire(){
-    $fire.passVideoToCanvas( $fire.detectFire );
+    passVideoToCanvas( detectFire );
   }
 
 })();
