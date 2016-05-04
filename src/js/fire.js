@@ -2,47 +2,17 @@ var $fire = ( () => {
   'use strict';
 
   var $fire = {};
-  const fireColors = [
-  'rgb(255,0,0)',
-  'rgb(255,156,81)',
-  'rgb(255,156,0)',
-  'rgb(255,141,115)',
-  'rgb(225,119,93)',
-  'rgb(198,53,36)',
-  'rgb(235,71,0)',
-  'rgb(255,90,4)',
-  'rgb(248,255,243)',
-  'rgb(254,254,254)',
-  'rgb(140,149,156)',
-  'rgb(183,172,166)',
-  'rgb(255,252,20)',
-  'rgb(251,254,201)',
-  'rgb(255,254,185)',
-  'rgb(255,254,218)',
-  'rgb(247,103,1)',
-  'rgb(174, 95, 60)'
-  ];
   let video = document.getElementById('video');
   let canvas = document.getElementById('fireCanvasImage');
 
   $fire.passVideoToCanvas = passVideoToCanvas;
   $fire.fetchPixelsImage = fetchPixelsImage;
   $fire.fetchPixelsWhitFire = fetchPixelsWhitFire;
+  $fire.fetchPixelsWhitFireWorker = fetchPixelsWhitFireWorker;
   $fire.drawRectangle = drawRectangle;
   $fire.detectFire = detectFire;
   $fire.initDetectionFire = initDetectionFire;
   return $fire;
-
-  /**
-   * Compare is a fire color
-   * @return true is a fire color, false is not a fire color.
-   * @author Jesus Perales.
-   */
-  function isFireColor(color){
-    let isFound = fireColors.filter(
-      (fireColor) => {return fireColor === color;});
-    return isFound.length > 0;
-  }
 
   /**
    * get all pixeles from canvas
@@ -83,6 +53,34 @@ var $fire = ( () => {
     return deferred.promise();
   }
 
+  /**
+   * Find pixels with fire in image pixels
+   * @author Jesus Perales.
+   */
+  function fetchPixelsWhitFireWorker(notifyNotWork){
+    let deferred = jQuery.Deferred();
+    let imgPixels = $fire.fetchPixelsImage();
+    let canvasHeight = canvas.height;
+    let canvasWidth = canvas.width;
+    let worker = new Worker('js/searchWorker.js');
+    let imgInformation = {};
+    imgInformation.imgPixels = imgPixels;
+    imgInformation.canvas = {};
+    imgInformation.canvas.height = canvasHeight;
+    imgInformation.canvas.width = canvasWidth;
+    worker.postMessage(imgInformation);
+    worker.addEventListener('message', (e) => {
+      console.debug(e);
+      if(e.data !== 'Finish'){
+        console.log('Esta es la respuesta del Worker: ' + e.data);
+      notifyNotWork(e.data);
+      }else{
+        worker.terminate();
+      }
+    }, false);
+    return deferred.promise();
+  }
+
   function drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY){
     let context = canvas.getContext('2d');
     context.lineWidth=10;
@@ -106,7 +104,7 @@ var $fire = ( () => {
     let minimumAxisX;
     let minimumAxisY;
     let flagFirstTime = true;
-    $fire.fetchPixelsWhitFire(function (pixelFire){
+    $fire.fetchPixelsWhitFireWorker(function (pixelFire){
       if(flagFirstTime){
         maximumAxisX = pixelFire.x;
         minimumAxisX = pixelFire.x;
@@ -137,7 +135,7 @@ var $fire = ( () => {
       setInterval(function() {
         canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         callback();
-      }, 300);
+      }, 1000);
     }, false);
   }
 
