@@ -21,8 +21,17 @@
   'rgb(174, 95, 60)'
   ];
 
-  // Al recibir un mensaje se ejecuta
-  self.addEventListener('message', function(e) {
+  // Execute web worker
+  self.addEventListener('message', searchFire, false);
+
+  /**
+   * Search pixels with fire and notify the
+   * worker listener when is found an pixel
+   * or is finished the scanning
+   * @param e e.data contains the information for the job
+   * @author Jesus Perales.
+   */
+  function searchFire(e){
     var imgInformation = e.data;
     var imgPixels = imgInformation.imgPixels;
     var canvas = imgInformation.canvas;
@@ -38,15 +47,12 @@
           pixelFire.x = x;
           pixelFire.y = y;
           pixelFire.color.rgb = rgb;
-          console.log('Pixel detected');
           self.postMessage( pixelFire );
-        }
-        if( (x + 1)  < canvas.width && (y + 1) < canvas.height){
-          self.postMessage('Finish');
         }
       }
     }
-  }, false);
+    self.postMessage('Finish');
+  }
 
   /**
    * Compare is a fire color
