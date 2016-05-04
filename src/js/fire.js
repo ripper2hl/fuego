@@ -40,7 +40,7 @@ var $fire = ( () => {
     imgInformation.canvas.height = canvasHeight;
     imgInformation.canvas.width = canvasWidth;
     worker.postMessage(imgInformation);
-    worker.addEventListener('message', (e) => {
+    worker.addEventListener('message', e => {
       if(e.data !== 'Finish'){
         notifyNotWork(e.data);
       }else{
@@ -74,7 +74,7 @@ var $fire = ( () => {
     let minimumAxisX;
     let minimumAxisY;
     let flagFirstTime = true;
-    $fire.fetchPixelsWhitFire(function (pixelFire){
+    $fire.fetchPixelsWhitFire( pixelFire => {
       if(flagFirstTime){
         maximumAxisX = pixelFire.x;
         minimumAxisX = pixelFire.x;
@@ -88,7 +88,7 @@ var $fire = ( () => {
         minimumAxisY = Math.min( minimumAxisY, pixelFire.y );
       }
     })
-    .done(function(){
+    .done( result => {
       $fire.drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY);
     });
   }
@@ -102,7 +102,7 @@ var $fire = ( () => {
     video.addEventListener('play', () => {
       canvas.width = video.videoWidth > 0 ?  video.videoWidth:640;
       canvas.height = video.videoHeight > 0 ? video.videoHeigth:480;
-      setInterval(function() {
+      setInterval( () => {
         canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         callback();
       }, 100);
@@ -114,7 +114,7 @@ var $fire = ( () => {
    * @author Jesus Perales.
    */
   function initDetectionFire(){
-    $fire.passVideoToCanvas($fire.detectFire);
+    $fire.passVideoToCanvas( $fire.detectFire );
   }
 
 })();
