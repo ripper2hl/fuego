@@ -1,0 +1,6 @@
+{
+  "name": "Fuego",
+  "tagline": "Detección de fuego con javascript",
+  "body": "# Fuego\r\nDetección de fuego con javascript\r\n\r\nEs un sistema de detección de fuego en video.\r\n\r\nResultados:\r\n\r\n![Resultado 1](doc/1.png)\r\n\r\n![Resultado 2](doc/2.png)\r\n\r\n![Resultado 3](doc/3.png)\r\n\r\n![Resultado 4](doc/4.png)\r\n\r\n![Resultado 5](doc/5.png)\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
