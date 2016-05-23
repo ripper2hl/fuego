@@ -45,27 +45,9 @@ var $fire = ( () => {
    * @author Jesus Perales.
    */
   function detectFire(){
-    let maximumAxisX;
-    let maximumAxisY;
-    let minimumAxisX;
-    let minimumAxisY;
     let flagFirstTime = true;
-    fetchPixelsWhitFire( pixelFire => {
-      if(flagFirstTime){
-        maximumAxisX = pixelFire.x;
-        minimumAxisX = pixelFire.x;
-        maximumAxisY = pixelFire.y;
-        minimumAxisY = pixelFire.y;
-        flagFirstTime = false;
-      }else{
-        maximumAxisX = Math.max( maximumAxisX, pixelFire.x );
-        minimumAxisX = Math.min( minimumAxisX, pixelFire.x );
-        maximumAxisY = Math.max( maximumAxisY, pixelFire.y );
-        minimumAxisY = Math.min( minimumAxisY, pixelFire.y );
-      }
-    })
-    .then( result => {
-      drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY);
+    fetchPixelsWhitFire( pixelFire => {}).then( result => {
+      drawRectangle(result.maximumX, result.maximumY, result.minimumX, result.minimumY);
     });
   }
 
@@ -84,12 +66,8 @@ var $fire = ( () => {
       imgInformation.canvas.width = canvas.width;
       worker.postMessage(imgInformation);
       worker.addEventListener('message', e => {
-        if(e.data !== 'Finish'){
-          progress(e.data);
-        }else{
           worker.terminate();
-          resolve();
-        }
+          resolve(e.data);
       }, false);
     });
   }

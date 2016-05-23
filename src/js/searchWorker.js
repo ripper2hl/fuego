@@ -32,26 +32,28 @@
    * @author Jesus Perales.
    */
   function searchFire(e){
-    var imgInformation = e.data;
-    var imgPixels = imgInformation.imgPixels;
-    var canvas = imgInformation.canvas;
-    for(var y = 0; y < canvas.height; y++){
-      for(var x = 0; x < canvas.width; x++){
-        var i = (x + y * canvas.width) * 4;
-        var r = imgPixels[i];
-        var g = imgPixels[i + 1];
-        var b = imgPixels[i + 2];
-        var rgb = 'rgb(' + r + ',' + g + ',' + b  +')';
+    let imgInformation = e.data;
+    let imgPixels = imgInformation.imgPixels;
+    let canvas = imgInformation.canvas;
+    let pixelsFire = [];
+
+    for(let y = 0; y < canvas.height; y++){
+      for(let x = 0; x < canvas.width; x++){
+        let i = (x + y * canvas.width) * 4;
+        let r = imgPixels[i];
+        let g = imgPixels[i + 1];
+        let b = imgPixels[i + 2];
+        let rgb = 'rgb(' + r + ',' + g + ',' + b  +')';
         if(isFireColor(rgb)){
-          var pixelFire = { color : { } };
+          let pixelFire = { color : { } };
           pixelFire.x = x;
           pixelFire.y = y;
           pixelFire.color.rgb = rgb;
-          self.postMessage( pixelFire );
+          pixelsFire.push(pixelFire);
         }
       }
     }
-    self.postMessage('Finish');
+    self.postMessage( determineRectangleCoords(pixelsFire) );
   }
 
   /**
@@ -64,6 +66,36 @@
       return fireColor === color;
     });
     return isFound.length > 0;
+  }
+
+  /**
+   * Determine maximum and minimum coords
+   * for axis Y and X for draw rectangle.
+   * @param pixelsFire list of fire pixels.
+   * @return rectangle maximum and minimum points for draw rectagnle
+   * @author Jesus Perales.
+   */
+  function determineRectangleCoords(pixelsFire){
+    let rectangle = {
+      maximumX : 0,
+      maximumY : 0,
+      minimumX : 0,
+      minimumY : 0
+    };
+    pixelsFire.forEach( (pixelFire , index) => {
+      if(index > 0){
+        rectangle.maximumX = Math.max( rectangle.maximumX, pixelFire.x );
+        rectangle.minimumX = Math.min( rectangle.minimumX, pixelFire.x );
+        rectangle.maximumY = Math.max( rectangle.maximumY, pixelFire.y );
+        rectangle.minimumY = Math.min( rectangle.minimumY, pixelFire.y );
+      }else{
+        rectangle.maximumX = pixelFire.x;
+        rectangle.minimumX = pixelFire.x;
+        rectangle.maximumY = pixelFire.y;
+        rectangle.minimumY = pixelFire.y;
+      }
+    });
+    return rectangle;
   }
 
 })();
