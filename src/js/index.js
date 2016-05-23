@@ -1,6 +1,10 @@
 ( () => {
   'use strict';
   $(function(){
-      $fire.initDetectionFire();
+    let options = {};
+    options.canvasId = 'c';
+    options.videoId = 'v';
+    options.frequency = 100;
+    $fire.initDetectionFire(options);
   });
 })();

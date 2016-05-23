@@ -1,9 +1,10 @@
 var $fire = ( () => {
   'use strict';
 
-  var $fire = {};
-  let video = document.getElementById('video');
-  let canvas = document.getElementById('fireCanvasImage');
+  const $fire = {};
+  let video;
+  let canvas;
+  let frequency = 100;
   $fire.initDetectionFire = initDetectionFire;
   return $fire;
 
@@ -12,9 +13,20 @@ var $fire = ( () => {
    * begin fire detection.
    * @author Jesus Perales.
    */
-  function initDetectionFire(){
-     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-     navigator.getUserMedia({video: true}, videoHandle, videoError);
+  function initDetectionFire(options){
+    try{
+      video = document.getElementById(options.videoId);
+      canvas = document.getElementById(options.canvasId);
+      frequency = options.frequency || frequency;
+      if(video && canvas){
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+        navigator.getUserMedia({video: true}, videoHandle, videoError);
+      }else{
+        throw new Error('Canvas and video element is required');
+      }
+    }catch(error){
+      console.error('Error in fire detection: ', error);
+    }
   }
 
   /**
@@ -23,7 +35,7 @@ var $fire = ( () => {
    * @author Jesus Perales.
    */
   function videoHandle(stream) {
-      document.getElementById('video').src = window.URL.createObjectURL(stream);
+      video.src = window.URL.createObjectURL(stream);
       passVideoToCanvas( detectFire );
   }
 
@@ -48,7 +60,7 @@ var $fire = ( () => {
       setInterval( () => {
         canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         callback();
-      }, 100);
+      }, frequency);
     }, false);
   }
 
