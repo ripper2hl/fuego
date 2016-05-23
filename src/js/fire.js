@@ -8,36 +8,48 @@ var $fire = ( () => {
   return $fire;
 
   /**
-   * Get all pixeles from canvas
-   * @return all pixels information for canvas image
+   * Capture video with web camera and
+   * begin fire detection.
    * @author Jesus Perales.
    */
-  function fetchPixelsImage(){
-    let data = canvas.getContext('2d').getImageData( 0, 0 , canvas.width, canvas.height);
-    var ctx = canvas.getContext('2d');
-    return data.data;
+  function initDetectionFire(){
+     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+     navigator.getUserMedia({video: true}, videoHandle, videoError);
   }
 
   /**
-   * Drawn an rectangle on canvas image
-   * with four points for the corners.
-   * @param maximumAxisX point maximum on axis x
-   * @param maximumAxisY point maximum on axis y
-   * @param minimumAxisX point minimum on axis x
-   * @param minimumAxisY point minimum on axis y
+   * Catch the stream video by the web camera and
+   * and begin the fire detection.
    * @author Jesus Perales.
    */
-  function drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY){
-    let context = canvas.getContext('2d');
-    context.lineWidth= 5 ;
-    context.strokeStyle="green";
-    context.beginPath();
-    context.moveTo(minimumAxisX, minimumAxisY);
-    context.lineTo(maximumAxisX, minimumAxisY);
-    context.lineTo(maximumAxisX, maximumAxisY);
-    context.lineTo(minimumAxisX, maximumAxisY);
-    context.lineTo(minimumAxisX, minimumAxisY);
-    context.stroke();
+  function videoHandle(stream) {
+      document.getElementById('video').src = window.URL.createObjectURL(stream);
+      passVideoToCanvas( detectFire );
+  }
+
+  /**
+   * Catch the error from webcamera
+   * @param error contains information for webcamera error
+   * @author Jesus Perales.
+   */
+  function videoError(error){
+    console.error('Error in web camera: ', error);
+  }
+
+  /**
+   * Convert image (img with fireImage id) to canvas
+   * @param callback function for after video is played //FIXME remove this function.
+   * @author Jesus Perales.
+   */
+  function passVideoToCanvas(callback){
+    video.addEventListener('play', () => {
+      canvas.width = video.videoWidth > 0 ?  video.videoWidth:640;
+      canvas.height = video.videoHeight > 0 ? video.videoHeigth:480;
+      setInterval( () => {
+        canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        callback();
+      }, 100);
+    }, false);
   }
 
   /**
@@ -73,27 +85,35 @@ var $fire = ( () => {
   }
 
   /**
-   * Convert image (img with fireImage id) to canvas
-   * @param callback function for after video is played //FIXME remove this function.
+   * Get all pixeles from canvas
+   * @return all pixels information for canvas image
    * @author Jesus Perales.
    */
-  function passVideoToCanvas(callback){
-    video.addEventListener('play', () => {
-      canvas.width = video.videoWidth > 0 ?  video.videoWidth:640;
-      canvas.height = video.videoHeight > 0 ? video.videoHeigth:480;
-      setInterval( () => {
-        canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        callback();
-      }, 100);
-    }, false);
+  function fetchPixelsImage(){
+    let data = canvas.getContext('2d').getImageData( 0, 0 , canvas.width, canvas.height);
+    var ctx = canvas.getContext('2d');
+    return data.data;
   }
 
   /**
-   * Begin process for fire detection.
+   * Drawn an rectangle on canvas image
+   * with four points for the corners.
+   * @param maximumAxisX point maximum on axis x
+   * @param maximumAxisY point maximum on axis y
+   * @param minimumAxisX point minimum on axis x
+   * @param minimumAxisY point minimum on axis y
    * @author Jesus Perales.
    */
-  function initDetectionFire(){
-    passVideoToCanvas( detectFire );
+  function drawRectangle(maximumAxisX, maximumAxisY, minimumAxisX, minimumAxisY){
+    let context = canvas.getContext('2d');
+    context.lineWidth= 5 ;
+    context.strokeStyle="green";
+    context.beginPath();
+    context.moveTo(minimumAxisX, minimumAxisY);
+    context.lineTo(maximumAxisX, minimumAxisY);
+    context.lineTo(maximumAxisX, maximumAxisY);
+    context.lineTo(minimumAxisX, maximumAxisY);
+    context.lineTo(minimumAxisX, minimumAxisY);
+    context.stroke();
   }
-
 })();
