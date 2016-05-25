@@ -1,42 +1,33 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Fuego by ripper2hl</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Fuego</h1>
-      <h2 class="project-tagline">Detección de fuego con javascript</h2>
-      <a href="https://github.com/ripper2hl/fuego" class="btn">View on GitHub</a>
-      <a href="https://github.com/ripper2hl/fuego/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/ripper2hl/fuego/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+<head>
+  <meta charset="UTF-8">
+  <title>Fuego by ripper2hl</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+</head>
+<body>
+  <section class="page-header">
+    <h1 class="project-name">Fuego</h1>
+    <h2 class="project-tagline">Detección de fuego con javascript</h2>
+    <a href="https://github.com/ripper2hl/fuego" class="btn">View on GitHub</a>
+    <a href="https://github.com/ripper2hl/fuego/zipball/master" class="btn">Download .zip</a>
+    <a href="https://github.com/ripper2hl/fuego/tarball/master" class="btn">Download .tar.gz</a>
+  </section>
 
-    <section class="main-content">
-      <h1>
-<a id="fuego" class="anchor" href="#fuego" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fuego</h1>
+  <section class="main-content">
+    <h1>
+      <a id="fuego" class="anchor" href="#fuego" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fuego</h1>
 
-<p>Detección de fuego con javascript</p>
+      <p>Detección de fuego con javascript</p>
 
-<p>Es un sistema de detección de fuego en video.</p>
+      <p>Es un sistema de detección de fuego en video.</p>
 
-<p>Resultados:</p>
-
-<p><img src="doc/1.png" alt="Resultado 1"></p>
-
-<p><img src="doc/2.png" alt="Resultado 2"></p>
-
-<p><img src="doc/3.png" alt="Resultado 3"></p>
-
-<p><img src="doc/4.png" alt="Resultado 4"></p>
-
-<p><img src="doc/5.png" alt="Resultado 5"></p>
+      <video id="video" src="videofile.ogg" autoplay poster="posterimage.jpg"></video>
+      <canvas id="canvas" width="300" height="300"></canvas>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/ripper2hl/fuego">Fuego</a> is maintained by <a href="https://github.com/ripper2hl">ripper2hl</a>.</span>
@@ -45,7 +36,17 @@
       </footer>
 
     </section>
-
-  
+    <script src="src/js/fire.js" charset="utf-8"></script>
+    <script type="text/javascript">
+    ( () => {
+      'use strict';
+      let options = {};
+      options.canvasId = 'canvas';
+      options.videoId = 'video';
+      options.frequency = 100;
+      options.urlSearchWorker = 'src/js/searchWorker.js';
+      $fire.initDetectionFire(options);
+    })();
+    </script>
   </body>
-</html>
+  </html>
