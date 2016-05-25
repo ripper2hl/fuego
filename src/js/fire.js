@@ -2,6 +2,7 @@ var $fire = ( () => {
   'use strict';
 
   const $fire = {};
+  let urlSearchWorker;
   let video;
   let canvas;
   let frequency = 100;
@@ -15,6 +16,10 @@ var $fire = ( () => {
    */
   function initDetectionFire(options){
     try{
+      urlSearchWorker = options.urlSearchWorker;
+      if(!urlSearchWorker){
+        throw new Error('URL for Search worker is required!');
+      }
       video = document.getElementById(options.videoId);
       canvas = document.getElementById(options.canvasId);
       frequency = options.frequency || frequency;
@@ -82,7 +87,7 @@ var $fire = ( () => {
    */
   function fetchPixelsWhitFire(progress){
     return new Promise( (resolve, reject) => {
-      let worker = new Worker('js/searchWorker.js');
+      let worker = new Worker(urlSearchWorker);
       let imgInformation = {};
       imgInformation.imgPixels = fetchPixelsImage();
       imgInformation.canvas = {};
