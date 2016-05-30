@@ -1,5 +1,5 @@
-# Fuego
-Detección de fuego con javascript
+# Fuego 
+Detección de fuego con base a video en javascript.
 
 Es un sistema de detección de fuego en video.(Solo funciona en Firefox 46 o posterior)
 
