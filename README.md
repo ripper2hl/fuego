@@ -14,3 +14,5 @@ Resultados:
 ![Resultado 4](doc/4.png)
 
 ![Resultado 5](doc/5.png)
+
+![Resultado 6](doc/6.png)
