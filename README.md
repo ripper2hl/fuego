@@ -1,4 +1,7 @@
 # Fuego 
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ripper2hl_fuego&metric=alert_status)](https://sonarcloud.io/dashboard?id=ripper2hl_fuego)
+
 Detección de fuego con base a video en javascript.
 
 Es un sistema de detección de fuego en video.(Solo funciona en Firefox 46 o posterior)
