@@ -40,7 +40,7 @@ var $fire = ( () => {
    * @author Jesus Perales.
    */
   function videoHandle(stream) {
-      video.src = window.URL.createObjectURL(stream);
+      video.srcObject = stream;
       passVideoToCanvas( detectFire );
   }
 
